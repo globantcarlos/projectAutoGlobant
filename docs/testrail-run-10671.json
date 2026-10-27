@@ -1,0 +1,190 @@
+[ {
+  "caseId" : 63828,
+  "title" : "TC001_TTP_MT_CONTACTABILITY_VERSION",
+  "refs" : "SSM-7812,SSM-12773,SSM-14131",
+  "preconditions" : "<p>CURL del microservicio para verificar versión</p>",
+  "steps" : "<p>Verificar la versión del microservicio tc-contactability</p>",
+  "expected" : "<p>curl --location '<a href=\"https://amx-c-mtpsbk-de.amlab7.com/tc/contactability/management/info\">https://amx-c-mtpsbk-de.amlab7.com/tc/contactability/management/info</a>'</p><p>.:: Respuesta del microservicio ::.<br>Verificar que se muestre la última versión con el cambio que se solicita en el ambiente a probar (DEV o QA):</p><p>{<br>\"Environment\":\"DE\",<br>\"Microservice\":\"am-tc-contactability\",<br>\"Version\":\"0.1.122-SNAPSHOT\"<br>}</p>",
+  "testId" : 4370655,
+  "statusId" : 1
+}, {
+  "caseId" : 194020,
+  "title" : "TC001_HP_MT_TC CONTACTABILITY_HH:MM:SS ACEPTA 200 OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "<p>Microservicio am-tc-contactability desplegado con el fix.<br />Endpoint POST /tc/contactability/saveContactability disponible.<br />Request desde canal WEB con horaCompra=\"18:05:37\".</p>\n",
+  "steps" : "<ol>\n<li>Enviar POST con campo de hora en formato \"18:05:37\".</li>\n<li>Verificar código HTTP de respuesta.</li>\n<li>Verificar que no hay error de deserialización.</li>\n<li>Verificar el log en New Relic homologado</li>\n</ol>\n",
+  "expected" : "<ol>\n<li>Enviar POST con campo de hora en formato \"18:05:37\".</li>\n<li>Verificar código HTTP de respuesta.</li>\n<li>Verificar que no hay error de deserialización.</li>\n<li>Verificar el log en New Relic homologado</li>\n</ol>\n\n<p>.:: Respuesta del microservicio::.</p>\n\n<p>HTTP 200 OK.<br />No hay error de deserialización.<br />El fix resuelve el 400 Bad Request.<br />ANTES de este fix, este request retornaba 400.<br />Formato en log MS_AM | TRANSACTION_ID: {id} | PNR: {pnr} | URL: {url_tb} | REQUEST: {body_json} | RESPONSE: {response_json}</p>\n",
+  "testId" : 4544707,
+  "statusId" : 1
+}, {
+  "caseId" : 194021,
+  "title" : "TC002_TTP_MT_TC CONTACTABILITY_MEDIANOCHE 00:00:00 OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=\"00:00:00\".",
+  "steps" : "1. Enviar POST con horaCompra=\"00:00:00\".\n2. Verificar código HTTP.",
+  "expected" : "1. Enviar POST con horaCompra=\"00:00:00\".\n2. Verificar código HTTP.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nMedianoche con segundos aceptada correctamente.\nNo hay error de deserialización.",
+  "testId" : 4544719,
+  "statusId" : 1
+}, {
+  "caseId" : 194022,
+  "title" : "TC003_TTP_MT_TC CONTACTABILITY_FIN DÍA 23:59:59 OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=\"23:59:59\".",
+  "steps" : "1. Enviar POST con horaCompra=\"23:59:59\".\n2. Verificar código HTTP.",
+  "expected" : "1. Enviar POST con horaCompra=\"23:59:59\".\n2. Verificar código HTTP.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nFin del día con segundos aceptado correctamente.\nNo hay error de deserialización.",
+  "testId" : 4544731,
+  "statusId" : 1
+}, {
+  "caseId" : 194023,
+  "title" : "TC004_TTP_MT_TC CONTACTABILITY_HORA 12:30:45 ACEPTA OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=\"12:30:45\".",
+  "steps" : "1. Enviar POST con horaCompra=\"12:30:45\".\n2. Verificar código HTTP.",
+  "expected" : "1. Enviar POST con horaCompra=\"12:30:45\".\n2. Verificar código HTTP.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nHora de medio día con segundos aceptada correctamente.\nNo hay error de deserialización.",
+  "testId" : 4544743,
+  "statusId" : 1
+}, {
+  "caseId" : 194024,
+  "title" : "TC005_TTP_MT_TC CONTACTABILITY_7 CAMPOS HH:MM:SS OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nTodos los 7 campos de hora en formato HH:mm:ss.",
+  "steps" : "1. Enviar POST con los 7 campos de hora en formato HH:mm:ss:\n   horaAceptacionAvisoPrivacidad, horaAceptacionTerminosCondiciones,\n   horaAceptacionWhatsapp, horaAceptacionCorreo, horaAceptacionPush,\n   horaAceptacionSMS, horaCompra.\n2. Verificar código HTTP.",
+  "expected" : "1. Enviar POST con los 7 campos de hora en formato HH:mm:ss:\n   horaAceptacionAvisoPrivacidad, horaAceptacionTerminosCondiciones,\n   horaAceptacionWhatsapp, horaAceptacionCorreo, horaAceptacionPush,\n   horaAceptacionSMS, horaCompra.\n2. Verificar código HTTP.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nTodos los campos deserializados correctamente.\nNo hay error 400.\nTodos los 7 campos aceptan HH:mm:ss.",
+  "testId" : 4544755,
+  "statusId" : 1
+}, {
+  "caseId" : 194025,
+  "title" : "TC006_TTP_MT_TC CONTACTABILITY_HH:MM SIGUE FUNCIONANDO",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=\"18:05\" (sin segundos).",
+  "steps" : "1. Enviar POST con horaCompra=\"18:05\" (formato sin segundos).\n2. Verificar código HTTP.",
+  "expected" : "1. Enviar POST con horaCompra=\"18:05\" (formato sin segundos).\n2. Verificar código HTTP.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nFormato sin segundos sigue funcionando.\nNo hay regresión.\nBackward compatible.",
+  "testId" : 4544767,
+  "statusId" : 1
+}, {
+  "caseId" : 194026,
+  "title" : "TC007_TTP_MT_TC CONTACTABILITY_MEDIANOCHE 00:00 OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=\"00:00\".",
+  "steps" : "1. Enviar POST con horaCompra=\"00:00\".\n2. Verificar código HTTP.",
+  "expected" : "1. Enviar POST con horaCompra=\"00:00\".\n2. Verificar código HTTP.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nMedianoche sin segundos sigue aceptada.\nNo hay regresión.",
+  "testId" : 4544779,
+  "statusId" : 1
+}, {
+  "caseId" : 194027,
+  "title" : "TC008_TTP_MT_TC CONTACTABILITY_FIN DÍA 23:59 OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=\"23:59\".",
+  "steps" : "1. Enviar POST con horaCompra=\"23:59\".\n2. Verificar código HTTP.",
+  "expected" : "1. Enviar POST con horaCompra=\"23:59\".\n2. Verificar código HTTP.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nFin del día sin segundos sigue aceptado.\nNo hay regresión.",
+  "testId" : 4544791,
+  "statusId" : 1
+}, {
+  "caseId" : 194028,
+  "title" : "TC009_TTP_MT_TC CONTACTABILITY_MEZCLA FORMATOS EN REQUEST",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=\"18:05:37\", horaAceptacionCorreo=\"14:30\" (mezcla).",
+  "steps" : "1. Enviar POST con mezcla de formatos:\n   horaCompra=\"18:05:37\" (con segundos)\n   horaAceptacionCorreo=\"14:30\" (sin segundos).\n2. Verificar código HTTP.",
+  "expected" : "1. Enviar POST con mezcla de formatos:\n   horaCompra=\"18:05:37\" (con segundos)\n   horaAceptacionCorreo=\"14:30\" (sin segundos).\n2. Verificar código HTTP.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nAmbos formatos aceptados simultáneamente en el mismo request.\nParsing flexible.\nNo hay conflicto entre formatos.",
+  "testId" : 4544803,
+  "statusId" : 1
+}, {
+  "caseId" : 194029,
+  "title" : "TC010_TTR_MT_TC CONTACTABILITY_OTROS CANALES SIN REGRESIÓN",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nRequest desde canal no-WEB con formato HH:mm.",
+  "steps" : "1. Enviar POST desde canal diferente a WEB con formato HH:mm.\n2. Verificar código HTTP.",
+  "expected" : "1. Enviar POST desde canal diferente a WEB con formato HH:mm.\n2. Verificar código HTTP.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nOtros canales no afectados.\nMismo comportamiento que antes del fix.",
+  "testId" : 4544815,
+  "statusId" : 1
+}, {
+  "caseId" : 194030,
+  "title" : "TC011_TTR_MT_TC CONTACTABILITY_HORAAVISOPRIVACIDAD OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraAceptacionAvisoPrivacidad=\"10:15:30\".",
+  "steps" : "1. Enviar POST con horaAceptacionAvisoPrivacidad=\"10:15:30\".\n2. Verificar código HTTP.\n3. Verificar que el campo se deserializa sin error.",
+  "expected" : "1. Enviar POST con horaAceptacionAvisoPrivacidad=\"10:15:30\".\n2. Verificar código HTTP.\n3. Verificar que el campo se deserializa sin error.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nCampo deserializado correctamente.\nNo hay error de parsing para este campo.",
+  "testId" : 4544827,
+  "statusId" : 1
+}, {
+  "caseId" : 194031,
+  "title" : "TC012_TTR_MT_TC CONTACTABILITY_HORATERMINOS OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraAceptacionTerminosCondiciones=\"09:00:01\".",
+  "steps" : "1. Enviar POST con horaAceptacionTerminosCondiciones=\"09:00:01\".\n2. Verificar código HTTP.\n3. Verificar que el campo se deserializa sin error.",
+  "expected" : "1. Enviar POST con horaAceptacionTerminosCondiciones=\"09:00:01\".\n2. Verificar código HTTP.\n3. Verificar que el campo se deserializa sin error.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nCampo deserializado correctamente.\nNo hay error de parsing para este campo.",
+  "testId" : 4544839,
+  "statusId" : 1
+}, {
+  "caseId" : 194032,
+  "title" : "TC013_TTR_MT_TC CONTACTABILITY_HORAWHATSAPP Y CORREO OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraAceptacionWhatsapp=\"11:22:33\", horaAceptacionCorreo=\"14:55:07\".",
+  "steps" : "1. Enviar POST con horaAceptacionWhatsapp=\"11:22:33\" y\n   horaAceptacionCorreo=\"14:55:07\".\n2. Verificar código HTTP.\n3. Verificar que ambos campos se deserializan sin error.",
+  "expected" : "1. Enviar POST con horaAceptacionWhatsapp=\"11:22:33\" y\n   horaAceptacionCorreo=\"14:55:07\".\n2. Verificar código HTTP.\n3. Verificar que ambos campos se deserializan sin error.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nAmbos campos deserializados correctamente.\nNo hay error de parsing.",
+  "testId" : 4544851,
+  "statusId" : 1
+}, {
+  "caseId" : 194033,
+  "title" : "TC014_TTR_MT_TC CONTACTABILITY_HORAPUSH Y SMS OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraAceptacionPush=\"08:45:59\", horaAceptacionSMS=\"20:10:00\".",
+  "steps" : "1. Enviar POST con horaAceptacionPush=\"08:45:59\" y\n   horaAceptacionSMS=\"20:10:00\".\n2. Verificar código HTTP.\n3. Verificar que ambos campos se deserializan sin error.",
+  "expected" : "1. Enviar POST con horaAceptacionPush=\"08:45:59\" y\n   horaAceptacionSMS=\"20:10:00\".\n2. Verificar código HTTP.\n3. Verificar que ambos campos se deserializan sin error.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nAmbos campos deserializados correctamente.\nNo hay error de parsing.",
+  "testId" : 4544863,
+  "statusId" : 1
+}, {
+  "caseId" : 194034,
+  "title" : "TC015_TTR_MT_TC CONTACTABILITY_HORACOMPRA HH:MM:SS OK",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=\"16:45:22\".",
+  "steps" : "1. Enviar POST con horaCompra=\"16:45:22\".\n2. Verificar código HTTP.\n3. Verificar que el campo se deserializa sin error.",
+  "expected" : "1. Enviar POST con horaCompra=\"16:45:22\".\n2. Verificar código HTTP.\n3. Verificar que el campo se deserializa sin error.\n\n.:: Respuesta del microservicio::.\n\nHTTP 200.\nCampo deserializado correctamente.\nEste es el campo más comúnmente afectado desde WEB.",
+  "testId" : 4544875,
+  "statusId" : 1
+}, {
+  "caseId" : 194035,
+  "title" : "TC016_TTF_MT_TC CONTACTABILITY_MILISEGUNDOS RECHAZADO",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=\"18:05:37:123\" (con milisegundos).",
+  "steps" : "1. Enviar POST con horaCompra=\"18:05:37:123\".\n2. Verificar código HTTP.\n3. Verificar mensaje de error.",
+  "expected" : "1. Enviar POST con horaCompra=\"18:05:37:123\".\n2. Verificar código HTTP.\n3. Verificar mensaje de error.\n\n.:: Respuesta del microservicio::.\n\nError controlado (400).\nFormato con milisegundos no soportado.\nSolo se aceptan HH:mm o HH:mm:ss.\nMensaje de error claro.",
+  "testId" : 4544887,
+  "statusId" : 1
+}, {
+  "caseId" : 194036,
+  "title" : "TC017_TTF_MT_TC CONTACTABILITY_TEXTO ABC RECHAZADO 400",
+  "refs" : "SSM-14131",
+  "preconditions" : "<p>Microservicio am-tc-contactability desplegado con el fix.<br />Endpoint POST /tc/contactability/saveContactability disponible.<br />horaCompra=\"abc\".</p>\n",
+  "steps" : "<ol>\n<li>Enviar POST con horaCompra=\"abc\".</li>\n<li>Verificar código HTTP.</li>\n<li>Verificar mensaje de error.</li>\n</ol>\n",
+  "expected" : "<ol>\n<li>Enviar POST con horaCompra=\"abc\".</li>\n<li>Verificar código HTTP.</li>\n<li>Verificar mensaje de error.</li>\n</ol>\n\n<p>.:: Respuesta del microservicio::.</p>\n\n<p>HTTP 400.<br />Formato de hora inválido rechazado.<br />Error controlado.<br />No se produce error 500.</p>\n",
+  "testId" : 4544899,
+  "statusId" : 1
+}, {
+  "caseId" : 194037,
+  "title" : "TC018_TTF_MT_TC CONTACTABILITY_HORA 25:00 FUERA RANGO",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=\"25:00:00\".",
+  "steps" : "1. Enviar POST con horaCompra=\"25:00:00\".\n2. Verificar código HTTP.\n3. Verificar que el error es controlado.",
+  "expected" : "1. Enviar POST con horaCompra=\"25:00:00\".\n2. Verificar código HTTP.\n3. Verificar que el error es controlado.\n\n.:: Respuesta del microservicio::.\n\nError controlado.\nHora 25 es inválida.\nNo se produce error 500.\nManejo adecuado de valores fuera de rango.",
+  "testId" : 4544911,
+  "statusId" : 1
+}, {
+  "caseId" : 194038,
+  "title" : "TC019_TTF_MT_TC CONTACTABILITY_CAMPO NULL CONTROLADO",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=null.",
+  "steps" : "1. Enviar POST con horaCompra=null.\n2. Verificar código HTTP.\n3. Verificar comportamiento.",
+  "expected" : "1. Enviar POST con horaCompra=null.\n2. Verificar código HTTP.\n3. Verificar comportamiento.\n\n.:: Respuesta del microservicio::.\n\nComportamiento definido (aceptado o rechazado según requerimiento del campo).\nNo se produce error 500.\nManejo controlado de valores nulos.",
+  "testId" : 4544923,
+  "statusId" : 1
+}, {
+  "caseId" : 194039,
+  "title" : "TC020_TTF_MT_TC CONTACTABILITY_CAMPO VACÍO CONTROLADO",
+  "refs" : "SSM-14131",
+  "preconditions" : "Microservicio am-tc-contactability desplegado con el fix.\nEndpoint POST /tc/contactability/saveContactability disponible.\nhoraCompra=\"\".",
+  "steps" : "1. Enviar POST con horaCompra=\"\" (string vacío).\n2. Verificar código HTTP.\n3. Verificar comportamiento.",
+  "expected" : "1. Enviar POST con horaCompra=\"\" (string vacío).\n2. Verificar código HTTP.\n3. Verificar comportamiento.\n\n.:: Respuesta del microservicio::.\n\nComportamiento definido.\nNo se produce error 500.\nManejo controlado de valores vacíos.",
+  "testId" : 4544935,
+  "statusId" : 1
+} ]

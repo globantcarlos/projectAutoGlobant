@@ -1,0 +1,19 @@
+[ {
+  "caseId" : 121530,
+  "title" : "TC001_APP2.0_Validación BDD Exitosa tc-region",
+  "refs" : "SSM-11165",
+  "preconditions" : "<p id=\"isPasted\">1.- Agregar url + path &nbsp;de tipo GET puede ser<a data-fr-linked=\"true\" href=\"https://amx-c-mtpsbk-pd.aeromexico.com/tc/region/regionByRoute\" data-pasted=\"true\">https://amx-c-mtpsbk-pd.aeromexico.com/tc/region/regionByRoute</a>&nbsp;</p><p>2.- Agregar headers (channel, content-type, x-transaction-id, departure,arrival)</p><p>3.- Agregar los parámetros o headers</p><p>4.- Enviar petición</p><p><br></p>",
+  "steps" : "",
+  "expected" : "",
+  "testId" : 6670680,
+  "statusId" : 1
+}, {
+  "caseId" : 121546,
+  "title" : "TC001_APP2.0_Validación BDD Negativos tc-region",
+  "refs" : "SSM-11165",
+  "preconditions" : "<p id=\"isPasted\">1.- Agregar url + path &nbsp;de tipo GET puede ser&nbsp;<a data-fr-linked=\"true\" href=\"https://amx-c-mtpsbk-pd.aeromexico.com/tc/region/regionByRoute\" data-pasted=\"true\">https://amx-c-mtpsbk-pd.aeromexico.com/tc/region/regionByRoute</a></p><p>2.- Agregar headers (channel, content-type, x-transaction-id, departure,arrival)</p><p>3.- Agregar los parámetros o headers</p><p>4.- Enviar petición</p><p><br></p>",
+  "steps" : "",
+  "expected" : "",
+  "testId" : 6670681,
+  "statusId" : 1
+} ]

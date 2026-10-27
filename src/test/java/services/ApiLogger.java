@@ -49,10 +49,25 @@ public final class ApiLogger {
         // Consola (panel Run de IntelliJ)
         System.out.println(log);
 
-        // Adjuntos en Allure
-        Allure.addAttachment("Request (curl)", "text/plain",
-                new ByteArrayInputStream(curl.getBytes(StandardCharsets.UTF_8)), ".txt");
-        Allure.addAttachment("Response", "application/json",
-                new ByteArrayInputStream(responseBody.getBytes(StandardCharsets.UTF_8)), ".json");
+        // Adjuntos en Allure (protegido: fuera del ciclo de un test no hay contexto activo)
+        if (hasActiveAllureTest()) {
+            Allure.addAttachment("Request (curl)", "text/plain",
+                    new ByteArrayInputStream(curl.getBytes(StandardCharsets.UTF_8)), ".txt");
+            Allure.addAttachment("Response", "application/json",
+                    new ByteArrayInputStream(responseBody.getBytes(StandardCharsets.UTF_8)), ".json");
+        }
+    }
+
+    /**
+     * Indica si hay un test Allure activo (contexto de lifecycle con test en ejecucion).
+     * Evita el error "Could not add attachment: no test is running" cuando el logger
+     * se invoca fuera del ciclo de un test (ej. runner de IntelliJ sin plugin Allure).
+     */
+    private static boolean hasActiveAllureTest() {
+        try {
+            return Allure.getLifecycle().getCurrentTestCase().isPresent();
+        } catch (RuntimeException lifecycleException) {
+            return false;
+        }
     }
 }

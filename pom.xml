@@ -18,6 +18,7 @@
         <playwright.version>1.55.0</playwright.version>
         <testng.version>7.10.2</testng.version>
         <allure.version>2.29.1</allure.version>
+        <cucumber.version>7.15.0</cucumber.version>
         <allure-maven.version>2.15.2</allure-maven.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <aspectj.version>1.9.25.1</aspectj.version>
@@ -54,6 +55,27 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.36</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Jackson Databind (usado por TestRailRunViewer para parsear respuestas de la API de TestRail) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.17.2</version>
+        </dependency>
+
+        <!-- Cucumber (mismo stack que am-my-trips-test-automation) -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber7-jvm</artifactId>
+            <version>2.29.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

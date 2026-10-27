@@ -1,0 +1,1 @@
+curl -i 'https://amx-c-mtpsbk-de.amlab7.com/tc/region/regionByRoute [headers exactos: {channel=web, Content-Type=application/json, x-transactionId=bdd-13939-4, departure=MEX, arrival=MTY}]'

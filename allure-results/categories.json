@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Casos funcionales",
+    "matchedStatuses": ["passed"]
+  },
+  {
+    "name": "Defectos del contrato (a reportar)",
+    "matchedStatuses": ["failed", "broken"]
+  }
+]

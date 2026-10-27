@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Funcionales post migración",
+    "matchedStatuses": ["passed"]
+  },
+  {
+    "name": "Defectos del contrato (a reportar)",
+    "matchedStatuses": ["failed", "broken"]
+  },
+  {
+    "name": "Errores de infraestructura",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*(Connection refused|timeout|UnknownHost).*"
+  }
+]

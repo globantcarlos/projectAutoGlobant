@@ -1,0 +1,82 @@
+[ {
+  "caseId" : 254746,
+  "title" : "TC001_HP_MT_TC REGION_REGIONBYROUTE OD INTERNACIONAL POST MIGRACION",
+  "refs" : "SSM-17667",
+  "preconditions" : "<p>Endpoint: GET /tc/region/regionByRoute<br />\nMicroservicio am-tc-region desplegado con la version migrada (Java 25 / Boot 4.1.0 / Jackson 3).<br />\nDownstreams tb-region / tb-airports-info / tb-timezone disponibles.<br />\nOD internacional de ejemplo: origin=MEX, destination=LAX.</p>\n",
+  "steps" : "<p><strong>Given</strong> am-tc-region desplegado con la version migrada en ambiente {env}</p>\n\n<p><strong>When</strong> Se consulta GET /tc/region/regionByRoute con headers:&nbsp;&nbsp;</p>\n\n<ul>\n<li>channel: web&nbsp;&nbsp;</li>\n<li>transactionID: {uuid}&nbsp;&nbsp;</li>\n<li>origin: MEX&nbsp;&nbsp;</li>\n<li>destination: LAX</li>\n</ul>\n\n<p><strong>Then</strong> El status code es 200<br />\n<strong>And</strong> El response trae regionShortDescription=INT y las subRegiones/loyaltyZones/countries<br />\n<strong>And</strong> La estructura del response es identica al baseline previo a la migracion</p>\n",
+  "expected" : "<p><strong>Given</strong> am-tc-region desplegado con la version migrada en ambiente {env}</p>\n\n<p><strong>When</strong> Se consulta GET /tc/region/regionByRoute con headers:&nbsp;&nbsp;</p>\n\n<ul>\n<li>channel: web&nbsp;&nbsp;</li>\n<li>transactionID: {uuid}&nbsp;&nbsp;</li>\n<li>origin: MEX&nbsp;&nbsp;</li>\n<li>destination: LAX</li>\n</ul>\n\n<p><strong>Then</strong> El status code es 200<br />\n<strong>And</strong> El response trae regionShortDescription=INT y las subRegiones/loyaltyZones/countries<br />\n<strong>And</strong> La estructura del response es identica al baseline previo a la migracion</p>\n\n<p>.:: Respuesta del microservicio::.</p>\n\n<p>{<br />\n&nbsp;&nbsp;&nbsp;&nbsp;\"airportOriginDestination\": \"MEXLAX\",<br />\n&nbsp;&nbsp;&nbsp;&nbsp;\"regionDescription\": \"Internacional\",<br />\n&nbsp;&nbsp;&nbsp;&nbsp;\"regionShortDescription\": \"INT\",<br />\n&nbsp;&nbsp;&nbsp;&nbsp;\"subRegionDestination\": \"USA\",<br />\n&nbsp;&nbsp;&nbsp;&nbsp;\"subRegionFinal\": \"USA\",<br />\n&nbsp;&nbsp;&nbsp;&nbsp;\"subRegionOrigin\": \"LOC\",<br />\n&nbsp;&nbsp;&nbsp;&nbsp;\"departureAirportLoyaltyZone\": \"Z01\",<br />\n&nbsp;&nbsp;&nbsp;&nbsp;\"arrivalAirportLoyaltyZone\": \"Z04\",<br />\n&nbsp;&nbsp;&nbsp;&nbsp;\"departureAirportCountry\": \"MX\",<br />\n&nbsp;&nbsp;&nbsp;&nbsp;\"arrivalAirportCountry\": \"US\"<br />\n}</p>\n",
+  "testId" : 6625527,
+  "statusId" : 1
+}, {
+  "caseId" : 254747,
+  "title" : "TC002_TTP_MT_TC REGION_REGIONBYROUTE OD DOMESTICO POST MIGRACION",
+  "refs" : "SSM-17667",
+  "preconditions" : "Endpoint: GET /tc/region/regionByRoute  \nOD domestico de ejemplo: origin=MEX, destination=MTY. Downstreams disponibles.",
+  "steps" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute con origin=MEX y destination=MTY\n\n**Then** El status code es 200  \n**And** regionShortDescription=DOM y subRegiones LOC",
+  "expected" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute con origin=MEX y destination=MTY\n\n**Then** El status code es 200  \n**And** regionShortDescription=DOM y subRegiones LOC\n\n.:: Respuesta del microservicio::.\n\n{  \n    \"airportOriginDestination\": \"MEXMTY\",  \n    \"regionDescription\": \"Domestico\",  \n    \"regionShortDescription\": \"DOM\",  \n    \"subRegionDestination\": \"LOC\",  \n    \"subRegionFinal\": \"LOC\",  \n    \"subRegionOrigin\": \"LOC\",  \n    \"departureAirportLoyaltyZone\": \"Z00\",  \n    \"arrivalAirportLoyaltyZone\": \"Z00\",  \n    \"departureAirportCountry\": \"MX\",  \n    \"arrivalAirportCountry\": \"MX\"  \n}",
+  "testId" : 6625528,
+  "statusId" : 1
+}, {
+  "caseId" : 254748,
+  "title" : "TC003_TTR_MT_TC REGION_CONSULTAS CONSECUTIVAS MISMO OD DATOS CONSISTENTES",
+  "refs" : "SSM-17667",
+  "preconditions" : "Endpoint: GET /tc/region/regionByRoute  \nRegla vigente SSM-11165: cache para reducir llamadas a TB Airports/Region/TimeZone (sin invalidacion forzada).  \nSe valida el EFECTO (consistencia), no el mecanismo interno del cache (caja negra).",
+  "steps" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute tres veces consecutivas con el mismo OD (MEX-LAX)\n\n**Then** Las tres respuestas son 200  \n**And** El contenido de las tres respuestas es identico (datos consistentes)",
+  "expected" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute tres veces consecutivas con el mismo OD (MEX-LAX)\n\n**Then** Las tres respuestas son 200  \n**And** El contenido de las tres respuestas es identico (datos consistentes)\n\n.:: Resultado esperado::.\n\nValidar status 200  \n1. Datos consistentes entre consultas consecutivas del mismo OD.  \n2. Sin variacion en estructura ni contenido (efecto de cache preservado, SSM-11165).  \n3. Sin regresion post-migracion en el comportamiento de cache.",
+  "testId" : 6625529,
+  "statusId" : 1
+}, {
+  "caseId" : 254749,
+  "title" : "TC004_TTF_MT_TC REGION_DOWNSTREAM NO DISPONIBLE 500 SERVICE UNAVAILABLE",
+  "refs" : "SSM-17667",
+  "preconditions" : "Endpoint: GET /tc/region/regionByRoute  \nError catalog (contrato): 500 ERR.TC.REGION.SERVICE_UNAVAILABLE por I/O error al llamar a un downstream.  \nRemediacion CWE-404 (tech solution): RestTemplate con connect-timeout=5000ms, read-timeout=10000ms.  \nEscenario con un downstream (tb-region/airports-info/timezone) no disponible o lento.  \nSe valida el EFECTO observable (error acotado), no el valor exacto del timeout.",
+  "steps" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute y un downstream no responde / responde lento\n\n**Then** El status code es 500  \n**And** reason = ERR.TC.REGION.SERVICE_UNAVAILABLE  \n**And** El servicio responde en tiempo acotado (fail-fast, no se cuelga indefinidamente)",
+  "expected" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute y un downstream no responde / responde lento\n\n**Then** El status code es 500  \n**And** reason = ERR.TC.REGION.SERVICE_UNAVAILABLE  \n**And** El servicio responde en tiempo acotado (fail-fast, no se cuelga indefinidamente)\n\n.:: Respuesta del microservicio::.\n\n{  \n    \"channel\": \"web\",  \n    \"httpCode\": 500,  \n    \"reason\": \"ERR.TC.REGION.SERVICE_UNAVAILABLE\"  \n}",
+  "testId" : 6625530,
+  "statusId" : 1
+}, {
+  "caseId" : 254750,
+  "title" : "TC005_TTP_MT_TC REGION_METRICA NEW RELIC DE ERRORES REGISTRADA POST MIGRACION",
+  "refs" : "SSM-17667",
+  "preconditions" : "Endpoint: GET /tc/region/regionByRoute  \nRegla vigente SSM-11165 (B2): am-tc-region registra metrica de errores en New Relic.  \nRiesgo de migracion: Jackson 3 / agente New Relic bajo Java 25.  \nSe usa un x-transactionId/transactionID de traza: nr-trace-17667-{uuid}.",
+  "steps" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute con transactionID=nr-trace-17667-{uuid} en un caso que dispare la metrica de error (ej: IATA inexistente)  \n**And** Se consulta New Relic (Logs / Custom Events) por el transactionId de traza\n\n**Then** El evento/metrica correspondiente aparece en New Relic  \n**And** Los campos conservan naming y valores respecto al baseline",
+  "expected" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute con transactionID=nr-trace-17667-{uuid} en un caso que dispare la metrica de error (ej: IATA inexistente)  \n**And** Se consulta New Relic (Logs / Custom Events) por el transactionId de traza\n\n**Then** El evento/metrica correspondiente aparece en New Relic  \n**And** Los campos conservan naming y valores respecto al baseline\n\n.:: Resultado esperado::.\n\nValidar trazabilidad  \n1. La metrica/evento de errores se registra en New Relic (SSM-11165).  \n2. El transactionId de traza (nr-trace-17667-*) es localizable en New Relic.  \n3. El agente New Relic opera correctamente bajo Java 25 (evento efectivamente emitido).  \n4. Sin regresion en la observabilidad post-migracion.",
+  "testId" : 6625531,
+  "statusId" : 1
+}, {
+  "caseId" : 254751,
+  "title" : "TC006_TTF_MT_TC REGION_ERROR HEADER OBLIGATORIO FALTANTE 400",
+  "refs" : "SSM-17667",
+  "preconditions" : "Endpoint: GET /tc/region/regionByRoute  \nError catalog (contrato): 400 ERR.TC.REGION.BAD_REQUEST por header requerido faltante.  \nSe envia la peticion sin el header destination (o sin origin/channel/transactionID).",
+  "steps" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute con origin=MEX pero SIN el header destination\n\n**Then** El status code es 400  \n**And** reason inicia con ERR.TC.REGION.BAD_REQUEST",
+  "expected" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute con origin=MEX pero SIN el header destination\n\n**Then** El status code es 400  \n**And** reason inicia con ERR.TC.REGION.BAD_REQUEST\n\n.:: Respuesta del microservicio::.\n\n{  \n    \"channel\": \"web\",  \n    \"httpCode\": 400,  \n    \"reason\": \"ERR.TC.REGION.BAD_REQUEST.Required request parameter 'destination' ... is not present\"  \n}",
+  "testId" : 6625532,
+  "statusId" : 1
+}, {
+  "caseId" : 254752,
+  "title" : "TC007_TTF_MT_TC REGION_ERROR IATA INEXISTENTE 500 EMPTY RESPONSE",
+  "refs" : "SSM-17667",
+  "preconditions" : "Endpoint: GET /tc/region/regionByRoute  \nError catalog (contrato/Postman): 500 ERR.TC.REGION.EMPTY_RESPONSE cuando no hay datos para el OD.  \nSe envia origin=ZZZ (IATA inexistente), destination=CUN.",
+  "steps" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute con origin=ZZZ y destination=CUN\n\n**Then** El status code es 500  \n**And** reason = ERR.TC.REGION.EMPTY_RESPONSE",
+  "expected" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se consulta GET /tc/region/regionByRoute con origin=ZZZ y destination=CUN\n\n**Then** El status code es 500  \n**And** reason = ERR.TC.REGION.EMPTY_RESPONSE\n\n.:: Respuesta del microservicio::.\n\n{  \n    \"channel\": \"web\",  \n    \"httpCode\": 500,  \n    \"reason\": \"ERR.TC.REGION.EMPTY_RESPONSE\"  \n}",
+  "testId" : 6625533,
+  "statusId" : 1
+}, {
+  "caseId" : 254753,
+  "title" : "TC008_TTR_MT_TC REGION_ESTABILIDAD CONSULTAS CONSECUTIVAS POST MIGRACION",
+  "refs" : "SSM-17667",
+  "preconditions" : "Endpoint: GET /tc/region/regionByRoute  \nMicroservicio migrado desplegado y estable. Rafaga ligera de 5-10 consultas (estabilidad, no rendimiento).",
+  "steps" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se ejecutan 5-10 consultas GET /tc/region/regionByRoute consecutivas con OD validos\n\n**Then** Todas las respuestas son 200  \n**And** No se presentan errores 500/504 ni degradacion observable",
+  "expected" : "**Given** am-tc-region desplegado con la version migrada en ambiente {env}\n\n**When** Se ejecutan 5-10 consultas GET /tc/region/regionByRoute consecutivas con OD validos\n\n**Then** Todas las respuestas son 200  \n**And** No se presentan errores 500/504 ni degradacion observable\n\n.:: Resultado esperado::.\n\nValidar status 200 en todas  \n1. Servicio estable bajo rafaga ligera (5-10 consultas).  \n2. Sin errores 500/504.  \n3. Estabilidad funcional post-migracion (rendimiento -> plan de estres).",
+  "testId" : 6625534,
+  "statusId" : 1
+}, {
+  "caseId" : 254754,
+  "title" : "TC009_TTP_MT_TC REGION_VERSION MANAGEMENT INFO",
+  "refs" : "SSM-17667",
+  "preconditions" : "Endpoint: GET /tc/region/management/info",
+  "steps" : "1. Consultar GET /tc/region/management/info.  \n2. Verificar respuesta exitosa con status 200.  \n3. Confirmar que la versión desplegada corresponde al release.",
+  "expected" : "1. Consultar GET /tc/region/management/info.  \n2. Verificar respuesta exitosa con status 200.  \n3. Confirmar que la versión desplegada corresponde al release.\n\n.:: Respuesta del microservicio::.\n\n{  \n    \"Environment\": \"dev\",  \n    \"Microservice\": \"am-tc-region\",  \n    \"Version\": \"x.x.x-SNAPSHOT\"  \n}",
+  "testId" : 6625535,
+  "statusId" : 1
+} ]

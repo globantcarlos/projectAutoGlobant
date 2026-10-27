@@ -1,0 +1,7 @@
+# Copia este archivo como testrail.properties y coloca tus credenciales
+testrail.url=https://amxqa.testrail.io
+testrail.username=tu_usuario@dominio.com
+testrail.apikey=TU_API_KEY
+testrail.projectId=5
+testrail.runId=13939
+testrail.enabled=true
